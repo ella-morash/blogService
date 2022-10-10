@@ -16,7 +16,9 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<BlogPost,Long> {
 
    @Query(value = "FROM BlogPost where blogStatus=1 order by createdOn")
-    List<BlogPost> findAllByBlogStatus_Published();
+   List<BlogPost> findAllByBlogStatus_Published();
+
+   List<BlogPost> findAllByBlogUser_UserName(String username);
 
 
 }

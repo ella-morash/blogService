@@ -3,11 +3,11 @@ package com.example.blog.service.impl;
 import com.example.blog.dto.*;
 import com.example.blog.entity.BlogPost;
 import com.example.blog.entity.BlogToTag;
-import com.example.blog.entity.Tag;
 import com.example.blog.entity.blogstatus.BlogStatus;
 import com.example.blog.repository.BlogToTagRepository;
 import com.example.blog.repository.BlogUserRepository;
 import com.example.blog.repository.PostRepository;
+import com.example.blog.repository.TagRepository;
 import com.example.blog.service.BlogPostService;
 import com.example.blog.utils.dtomapper.ConverterDTO;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +27,7 @@ public class BlogPostServiceImpl implements BlogPostService {
     private final BlogUserRepository blogUserRepository;
 
     private final BlogToTagRepository blogToTagRepository;
+    private final TagRepository tagRepository;
 
     @Override
     public List<BlogPostDTOResponse> getAllPublishedPostsOrderedByCreationDate() {
@@ -114,32 +115,91 @@ public class BlogPostServiceImpl implements BlogPostService {
     }
 
     @Override
-    public void updateBloPost(UpdatingDTORequest updatingDTORequest) {
+    public void updateBloPost(Long postId, UpdatingDTORequest updatingDTORequest) {
+
+        var post = postRepository.findById(postId)
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND
+                        ,String.format("Article with id %d does not exists",postId)));
+
+        post.setTitle(updatingDTORequest.getTittle());
+        post.setBody(updatingDTORequest.getBody());
+
+        postRepository.save(post);
+
+        updatingDTORequest.getTags().stream()
+                .map(ConverterDTO::TagDtoToEntity)
+
+                .forEach(tag -> {
+                    tagRepository.save(tag);
+
+                    var relation = BlogToTag.builder()
+                                     .blogPost(post)
+                                     .tag(tag)
+                            .build();
+
+                    blogToTagRepository.save(relation);
+
+
+                });
+
+
+
 
     }
 
     @Override
     public void publish(Long blogPostId) {
 
+        var post = postRepository.findById(blogPostId)
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND
+                        ,String.format("Article with id %d does not exists",blogPostId)));
+
+        post.setBlogStatus(BlogStatus.PUBLISHED);
+
+        postRepository.save(post);
+
     }
 
     @Override
     public void unPublish(Long blogPostId) {
+
+        var post = postRepository.findById(blogPostId)
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND
+                        ,String.format("Article with id %d does not exists",blogPostId)));
+
+        post.setBlogStatus(BlogStatus.UNPUBLISHED);
+
+        postRepository.save(post);
 
     }
 
     @Override
     public void block(Long blogPostId) {
 
+        var post = postRepository.findById(blogPostId)
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND
+                        ,String.format("Article with id %d does not exists",blogPostId)));
+
+        post.setBlogStatus(BlogStatus.BLOCKED);
+
+        postRepository.save(post);
+
     }
 
     @Override
     public List<BlogPostDTOResponse> getAllPostsByUsername(String userName) {
-        return null;
+
+        return postRepository.findAllByBlogUser_UserName(userName)
+                .stream()
+                .map(ConverterDTO::convertFromBlogPostToDTOShort)
+                .toList();
     }
 
     @Override
     public void deletePostById(Long postId) {
+
+        postRepository.deleteById(postId);
+        blogToTagRepository.deleteAllByBlogPost_Id(postId);
 
     }
 }

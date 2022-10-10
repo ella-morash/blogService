@@ -15,4 +15,6 @@ public interface BlogToTagRepository extends JpaRepository<BlogToTag,Long> {
 
 
     List<BlogToTag> findAllByTagName(String name);
+
+    void deleteAllByBlogPost_Id(Long id);
 }

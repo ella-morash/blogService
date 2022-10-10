@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+
 
 import javax.persistence.*;
 import java.time.LocalDate;

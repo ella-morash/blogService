@@ -15,7 +15,7 @@ public interface BlogPostService {
 
     BlogPostDTOResponseFullInfo getPostByIdWithAnyStatus(Long blogPostId);
 
-    void updateBloPost(UpdatingDTORequest updatingDTORequest);
+    void updateBloPost(Long postId,UpdatingDTORequest updatingDTORequest);
 
     void publish(Long blogPostId);
     void unPublish(Long blogPostId);
