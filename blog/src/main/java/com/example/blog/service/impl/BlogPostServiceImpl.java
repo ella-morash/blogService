@@ -25,7 +25,6 @@ public class BlogPostServiceImpl implements BlogPostService {
 
     private final PostRepository postRepository;
     private final BlogUserRepository blogUserRepository;
-
     private final BlogToTagRepository blogToTagRepository;
     private final TagRepository tagRepository;
 
@@ -96,9 +95,11 @@ public class BlogPostServiceImpl implements BlogPostService {
 
     @Override
     public BlogPostDTOResponseFullInfo getPostByIdWithAnyStatus(Long blogPostId) {
+
         var post = postRepository.findById(blogPostId)
                 .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND
                         ,String.format("Article with id %d does not exists",blogPostId)));
+
         var tags = blogToTagRepository.findAllByBlogPostId(blogPostId)
                 .stream()
                 .map(blogToTag -> ConverterDTO.entityTagToDTO(blogToTag.getTag()))

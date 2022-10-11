@@ -3,6 +3,7 @@ package com.example.blog.utils.dtomapper;
 
 import com.example.blog.dto.*;
 import com.example.blog.entity.BlogPost;
+import com.example.blog.entity.BlogUser;
 import com.example.blog.entity.Tag;
 import org.springframework.stereotype.Component;
 
@@ -55,6 +56,30 @@ public class ConverterDTO {
 
         return TagsDTOResponse.builder()
                 .name(tag.getName())
+                .build();
+    }
+
+    public static BlogUserDTOResponseCount convertBlogUserToDtoResponse(BlogUser blogUser
+            , Integer count) {
+
+        return BlogUserDTOResponseCount.builder()
+                .blogUserId(blogUser.getId())
+                .blogUserFirstName(blogUser.getFirstName())
+                .blogUserLastName(blogUser.getLastName())
+                .username(blogUser.getUserName())
+                .blogsCount(count)
+                .build();
+    }
+
+    public static BlogUserDTOResponseWithPosts convertToBlogUserDToWithPosts(BlogUser user, List<BlogPostDTOResponse> posts) {
+
+        return BlogUserDTOResponseWithPosts.builder()
+                .blogUserId(user.getId())
+                .blogUserFirstName(user.getFirstName())
+                .blogUserLastName(user.getLastName())
+                .username(user.getUserName())
+                .posts(posts)
+
                 .build();
     }
 }

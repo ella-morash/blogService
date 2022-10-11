@@ -1,5 +1,6 @@
 package com.example.blog.entity;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,21 +12,16 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name = "blog_user_password")
+@Table(name = "blog_user_session")
 @Entity
-public class BlogUserPassword {
+public class BlogUserSession {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
-    @Column(name = "password_hash")
-    private String passwordHash;
-    @Column(name = "salt")
-    private String salt;
+    @Column(name = "session_id",unique = true,nullable = false,updatable = false)
+    private String sessionId;
+    @JoinColumn(name = "blog_user_id",nullable = false)
     @OneToOne
-    @JoinColumn(name = "user_id",unique = true,nullable = false)
     private BlogUser blogUser;
-
-
-
 }
