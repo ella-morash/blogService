@@ -37,6 +37,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         }
 
         BlogUserSession session = blogUserSessionRepository.findBySessionId(header);
+
         var principal = BlogUserSessionDTO.builder()
                 .blogUserId(session.getBlogUser().getId())
                 .sessionId(session.getSessionId())

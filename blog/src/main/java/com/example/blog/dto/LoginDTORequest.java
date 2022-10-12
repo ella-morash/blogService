@@ -12,5 +12,5 @@ public class LoginDTORequest {
 
     private String username;
 
-    private UserPasswordDTORequest password;
+    private String password;
 }

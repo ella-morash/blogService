@@ -18,5 +18,5 @@ public class RegistrationDTORequest {
 
     private String username;
 
-    private UserPasswordDTORequest password;
+    private String password;
 }
